@@ -1,0 +1,42 @@
+﻿@page "/categories"
+
+<h3>CategoryList</h3>
+
+<RadzenButton Click=@(args => AddCategory()) Text="Add" ButtonStyle="ButtonStyle.Primary" />
+@if (SelectedRow is not null)
+{
+    <RadzenButton Click=@(args => GoToCategoryDetails(SelectedRow[0].Id)) Text="Details" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Click=@(args => UpdateCategory(SelectedRow[0].Id)) Text="Update" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Click=@(args => DeleteCategory(SelectedRow[0].Id)) Text="Delete" ButtonStyle="ButtonStyle.Primary" />
+}
+else
+{
+    <RadzenButton Text="Details" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Text="Update" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Primary" />
+}
+
+@if (ShowAlert == true)
+{
+    <RadzenAlert Variant="@variant" AlertStyle="@alertStyle" Size="@size" Shade="Shade.Dark" AllowClose=false>
+        DataBase is loading...
+    </RadzenAlert>
+}
+@if (ShowAlertWhenDeleting == true)
+{
+    <RadzenAlert Variant="@variant" AlertStyle="@alertStyle" Size="@size" Shade="Shade.Dark" AllowClose=false>
+        Deleting the category...
+    </RadzenAlert>
+}
+
+@if (Categories != null)
+{
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@Categories" TItem="Entities.Category" ColumnWidth="300px" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@SelectedRow>
+        <Columns>
+            <RadzenDataGridColumn TItem="Entities.Category" Property="Id" Title="ID" Frozen="true" Width="160px" />
+            <RadzenDataGridColumn TItem="Entities.Category" Property="Name" Title="Name" Width="160px" />
+            <RadzenDataGridColumn TItem="Entities.Category" Property="DisplayOrder" Title="DisplayOrder" Width="160px" />
+        </Columns>
+    </RadzenDataGrid>
+}

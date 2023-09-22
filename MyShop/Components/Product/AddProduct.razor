@@ -1,0 +1,64 @@
+﻿@page "/products/AddProduct"
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+        <RadzenTemplateForm TItem="Entities.Product" Data=@Model Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+            <RadzenFieldset Text="Add Product">
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Name" />
+                    </div>
+                    <div class="col">
+                        <RadzenTextBox style="display: block" Name="Name" @bind-Value=@Model.Name class="w-100" />
+                        <RadzenRequiredValidator Component="Name" Text="Name is required" Popup=true Style="position: absolute" />
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="BrandName" />
+                    </div>
+                    <div class="col">
+                        <RadzenTextBox style="display: block" Name="BrandName" @bind-Value=@Model.BrandName class="w-100" />
+                        <RadzenRequiredValidator Component="BrandName" Text="BrandName is required" Popup=true Style="position: absolute" />
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Category" />
+                    </div>
+                    <div class="col">
+                        <RadzenDropDown Name="Category" @bind-Value=@CategoryId Data=@Categories TextProperty=Name ValueProperty=Id Style="width: 100%; max-width: 400px;" />
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Price" />
+                    </div>
+                    <div class="col">
+                        <RadzenNumeric Culture="hr" Name="Price" @bind-Value="@Model.Price" Placeholder="Enter a Price" style="display: block" class="w-100" Format="C0" />
+                        <RadzenNumericRangeValidator Component="Price" Min="1" Max="150" Text="Price should be between 1 and 150" Popup=true Style="position: absolute" />
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="QuantityInStock" />
+                    </div>
+                    <div class="col">
+                        <RadzenNumeric Name="QuantityInStock" @bind-Value="@Model.QuantityInStock" Placeholder="Enter a quantity" style="display: block" class="w-100" />
+                        <RadzenNumericRangeValidator Component="QuantityInStock" Min="1" Max="150" Text="Quantity should be between 1 and 150" Popup=true Style="position: absolute" />
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col">
+                        <RadzenCard>
+                            <h4 class="mb-4">Add product picture: <b>@(Model.Name + " " + Model.BrandName)</b></h4>
+                            <RadzenFileInput @bind-Value=@Model.AssociatedImage @bind-FileName=@fileName @bind-FileSize=@fileSize TValue="string" class="w-100" />
+                        </RadzenCard>
+                    </div>
+                </div>
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+                <RadzenButton Click=@(args => Cancle()) Text="Cancle" ButtonStyle="ButtonStyle.Primary" />
+            </RadzenFieldset>
+        </RadzenTemplateForm>
+    </div>
+</div>

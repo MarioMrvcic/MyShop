@@ -1,0 +1,10 @@
+﻿@page "/categories/{Id:int}"
+
+<h3>CategoryDetails</h3>
+
+@if (Category is not null)
+{
+    <p>Category Id: @Category.Id</p>
+    <p>Category Name: @Category.Name</p>
+    <p>Category DisplayOrder: @Category.DisplayOrder</p>
+}

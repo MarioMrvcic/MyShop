@@ -16,6 +16,7 @@ public class AplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Category>().HasData(DataBaseInitialization.ReturnCategories());
     }
 }

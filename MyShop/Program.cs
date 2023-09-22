@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using MyShop.Data;
+using MyShop.Interfaces;
+using MyShop.Services;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,8 @@ builder.Services.AddDbContext<AplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ShopAppConectionString"));
 });
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

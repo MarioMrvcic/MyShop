@@ -1,0 +1,50 @@
+﻿@page "/products"
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>ProductList</h3>
+
+<RadzenButton Click=@(args => AddProduct()) Text="Add" ButtonStyle="ButtonStyle.Primary" />
+@if (SelectedRow is not null)
+{
+    <RadzenButton Click=@(args => GoToProductDetails(SelectedRow[0].Id)) Text="Details" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Click=@(args => UpdateProduct(SelectedRow[0].Id)) Text="Update" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Click=@(args => DeleteProduct(SelectedRow[0].Id)) Text="Delete" ButtonStyle="ButtonStyle.Primary" />
+}
+else
+{
+    <RadzenButton Text="Details" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Text="Update" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Primary" />
+}
+
+@if (ShowAlert == true)
+{
+    <RadzenAlert Variant="@variant" AlertStyle="@alertStyle" Size="@size" Shade="Shade.Dark" AllowClose=false>
+        DataBase is loading...
+    </RadzenAlert>
+}
+@if (ShowAlertWhenDeleting == true)
+{
+    <RadzenAlert Variant="@variant" AlertStyle="@alertStyle" Size="@size" Shade="Shade.Dark" AllowClose=false>
+        Deleting the category...
+    </RadzenAlert>
+}
+
+@if (Products != null)
+{
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@Products" TItem="Entities.Product" ColumnWidth="300px" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@SelectedRow>
+        <Columns>
+            <RadzenDataGridColumn TItem="Entities.Product" Property="Id" Title="ID" Frozen="true" Width="160px" />
+            <RadzenDataGridColumn TItem="Entities.Product" Property="Name" Title="Name" Width="160px" />
+            <RadzenDataGridColumn TItem="Entities.Product" Property="BrandName" Title="Brand Name" Width="160px" />
+            <RadzenDataGridColumn TItem="Entities.Product" Property="Category.Name" Title="Category Name" Width="160px" />
+            <RadzenDataGridColumn TItem="Entities.Product" Property="Price" Title="Price" Width="160px">
+                <Template Context="Products">
+                    @string.Format(cultureInfo, "{0:C}", Products.Price)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Entities.Product" Property="QuantityInStock" Title="Quantity In Stock" Width="160px" />
+        </Columns>
+    </RadzenDataGrid>
+}

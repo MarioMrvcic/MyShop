@@ -1,0 +1,12 @@
+﻿@page "/products/{Id:int}"
+
+<h3>ProductDetails</h3>
+
+@if (Product is not null)
+{
+    <p>Product ID: @Product.Id</p>
+    <p>Name ID: @Product.Name</p>
+    <p>BrandName ID: @Product.BrandName</p>
+    <p>Price ID: @Product.Price</p>
+    <p>QuantityInStock ID: @Product.QuantityInStock</p>
+}

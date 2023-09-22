@@ -1,0 +1,36 @@
+﻿@page "/categories/UpdateCategory/{Id:int}"
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+        <RadzenTemplateForm TItem="Entities.Category" Data=@Model Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+            <RadzenFieldset Text="Update Category">
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Name" />
+                    </div>
+                    <div class="col">
+                        <RadzenTextBox style="display: block" Name="Name" @bind-Value=@Model.Name class="w-100" />
+                        <RadzenRequiredValidator Component="Name" Text="Name is required" Popup=true Style="position: absolute" />
+                        <RadzenCustomValidator Component="Name" Validator="@(() => ValidateName(Model.Name))" Text="Item with that name already exists" Popup=@true Style="position: absolute" />
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Display Order" />
+                    </div>
+                    <div class="col">
+                        <RadzenNumeric Name="DisplayOrder" @bind-Value="@Model.DisplayOrder" Placeholder="Enter a number" style="display: block" class="w-100" />
+                        <RadzenNumericRangeValidator Component="DisplayOrder" Min="1" Max="10" Text="DisplayOrder should be between 1 and 10" Popup=true Style="position: absolute" />
+                        <RadzenCustomValidator Component="DisplayOrder" Validator="@(() => ValidateDisplayOrder(Model.DisplayOrder))" Text="Item with that display order already exists" Popup=@true Style="position: absolute" />
+                    </div>
+                </div>
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+                <RadzenButton Click=@(args => Cancel()) Text="Cancel" ButtonStyle="ButtonStyle.Primary" />
+            </RadzenFieldset>
+        </RadzenTemplateForm>
+    </div>
+</div>
+
+@code {
+
+}
