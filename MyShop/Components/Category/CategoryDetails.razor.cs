@@ -3,7 +3,7 @@ using MyShop.Interfaces;
 
 namespace MyShop.Components.Category;
 
-public partial class CategoryDetails
+public partial class CategoryDetails : ComponentBase
 {
     [Inject]
     public ICategoryService CategoryService { get; set; }

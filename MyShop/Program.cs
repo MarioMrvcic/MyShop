@@ -5,19 +5,26 @@ using MyShop.Data;
 using MyShop.Interfaces;
 using MyShop.Services;
 using Radzen;
+using Microsoft.AspNetCore.Identity;
+using MyShop.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDefaultIdentity<ShopAppWebUser>(options => options.SignIn.RequireConfirmedAccount = false).AddRoles<IdentityRole>().AddEntityFrameworkStores<AplicationDbContext>();
+
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor().AddHubOptions(o =>
+{
+    o.MaximumReceiveMessageSize = 1024 * 1024 * 10;
+});
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddDbContext<AplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ShopAppConectionString"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyShopConnectionString"));
 });
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -37,6 +44,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

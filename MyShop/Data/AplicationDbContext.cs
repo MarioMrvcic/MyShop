@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyShop.Entities;
 
 namespace MyShop.Data;
 
-public class AplicationDbContext : DbContext
+public class AplicationDbContext : IdentityDbContext<ShopAppWebUser>
 {
 
     public AplicationDbContext(DbContextOptions options) : base(options)

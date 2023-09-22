@@ -4,7 +4,7 @@ using Radzen;
 
 namespace MyShop.Components.Category;
 
-public partial class UpdateCategory
+public partial class UpdateCategory : ComponentBase
 {
     [Inject]
     public ICategoryService CategoryService { get; set; }
