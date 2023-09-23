@@ -69,12 +69,8 @@ main {
     }
 }
 
-.btn.btn-info {
+.custom-button {
     background-color: rgb(105,102,219);
     color: white;
-    border-color: white;
-}
-
-.top-row.px-4 {
-    padding-right: 5px !important;
+    margin-left: 20px;
 }
