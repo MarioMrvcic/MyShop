@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims;
+@using MyShop.Entities;
 @inherits LayoutComponentBase
 
 <PageTitle>ShopApp.Web</PageTitle>
@@ -21,9 +22,9 @@
                         <a class="dropdown-item" href="/identity/account/register" style="margin: 0px">Register</a>
                     </div>
                 </div>
-                <button class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false">
+                <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-basket"></i>
-                </button>
+                </a>
             }
             else
             {
@@ -36,9 +37,9 @@
                         <a class="dropdown-item" href="/identity/account/logout" style="margin: 0px">Logout</a>
                     </div>
                 </div>
-                <button class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false">
+                <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-basket"></i>
-                </button>
+                </a>
             }
         </div>
 
@@ -62,6 +63,10 @@
 
     string? userName;
 
+    //za login
+    private bool isDialogOpen = false;
+    LoginModel loginModel = new LoginModel();
+
     protected override async Task OnInitializedAsync()
     {
         if (AuthenticationStateTask is null)
@@ -76,4 +81,18 @@
         _isAuthenticated = user.Identity.IsAuthenticated;
     }
 
+    void ShowLogin()
+    {
+        isDialogOpen = true;
+    }
+
+    void OnLogin(LoginArgs args, string name)
+    {
+        
+    }
+
+    void OnRegister(string name)
+    {
+        
+    }
 }

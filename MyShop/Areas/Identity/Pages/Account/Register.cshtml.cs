@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using MyShop.Entities;
+using MyShop.Interfaces;
+using MyShop.Services;
 
 namespace MyShop.Areas.Identity.Pages.Account
 {
@@ -31,6 +33,7 @@ namespace MyShop.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ICartService _cartService;
 
         public RegisterModel(
             UserManager<ShopAppWebUser> userManager,
@@ -38,7 +41,8 @@ namespace MyShop.Areas.Identity.Pages.Account
             SignInManager<ShopAppWebUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ICartService cartService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -47,6 +51,7 @@ namespace MyShop.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _cartService = cartService;
         }
 
         /// <summary>
@@ -143,6 +148,8 @@ namespace MyShop.Areas.Identity.Pages.Account
                 user.PostalCode = Input.PostalCode;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                //dodavanje novog carta kod kreacije
+                var cart = await _cartService.CreateNewCart(user);
 
                 if (result.Succeeded)
                 {

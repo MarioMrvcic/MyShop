@@ -28,6 +28,7 @@ builder.Services.AddDbContext<AplicationDbContext>(options =>
 });
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 
@@ -52,3 +53,11 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+
+//za deletat cart i usera
+//DELETE FROM[MyShop].[dbo].[Carts]
+//WHERE[ShopAppWebUserId] = 'd6a86494-66f5-4fc4-af68-0c2231de85f7';
+
+//DELETE FROM[MyShop].[dbo].[AspNetUsers]
+//WHERE[Id] = 'd6a86494-66f5-4fc4-af68-0c2231de85f7';

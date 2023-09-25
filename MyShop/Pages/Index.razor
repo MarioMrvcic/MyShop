@@ -6,38 +6,35 @@
     @foreach (Entities.Product product in Products)
     {
         <RadzenCard Class="rz-my-12 rz-mx-auto" Style="width: 420px">
-            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceAround" Gap="1rem" Class="rz-p-4">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-p-4">
                 <RadzenImage Path="@product.AssociatedImage" Style="max-width: 200px; max-height: 200px; ascpect-ratio:auto;" />
                 <RadzenStack Gap="0">
-                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Name</RadzenText>
-                    <RadzenText TextStyle="TextStyle.Body1"><b>@product.Name</b></RadzenText>
-                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">BrandName</RadzenText>
-                    <RadzenText TextStyle="TextStyle.Body1"><b>@product.BrandName</b></RadzenText>
                 </RadzenStack>
             </RadzenStack>
             <RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-p-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
                 <RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Product Information</strong></RadzenText>
                 <RadzenRow RowGap="0">
                     <RadzenColumn SizeSM="8">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0" >Name</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@product.Name</b></RadzenText>
                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Category</RadzenText>
                         <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@product.Category.Name</b></RadzenText>
                     </RadzenColumn>
                     <RadzenColumn SizeSM="4">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">BrandName</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@product.BrandName</b></RadzenText>
                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Price</RadzenText>
                         <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@product.Price€</b></RadzenText>
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenCard>
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
-                <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Text="Details" Click=@(args => GoToProductDetails(product.Id)) />
                 <AuthorizeView Roles="Admin">
                     <RadzenButton Variant="Variant.Text" Text="Update" Click=@(args => UpdateProduct(product.Id)) />
                 </AuthorizeView>
+                <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Text="Details" Click=@(args => GoToProductDetails(product.Id)) />
+                <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Text="Add to cart" Click=@(args => AddProductToCart(product.Id)) />
             </RadzenStack>
         </RadzenCard>
     }
 </RadzenStack>
-
-@code {
-
-}

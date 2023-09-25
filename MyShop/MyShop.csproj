@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Cart\" />
     <Folder Include="Components\Profile\" />
   </ItemGroup>
 
