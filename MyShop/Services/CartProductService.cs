@@ -41,7 +41,7 @@ public class CartProductService : ICartProductService
 
         await dbContext.SaveChangesAsync();
 
-        return productToIncrease;
+        return fetchedCartProduct;
     }
 
     public async Task<CartProduct> DecreaseQuantityForProductInCart(CartProduct productToDecrease)
@@ -58,7 +58,24 @@ public class CartProductService : ICartProductService
 
         await dbContext.SaveChangesAsync();
 
-        return productToDecrease;
+        return fetchedCartProduct;
+    }
+
+    public async Task<CartProduct> UpdateQuantityForProductInCart(CartProduct productToUpdate)
+    {
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var fetchedCartProduct = await dbContext.CartProduct.Where(cp => cp.ProductsId == productToUpdate.ProductsId && cp.CartId == productToUpdate.CartId).FirstOrDefaultAsync();
+        fetchedCartProduct.ProductQuantity=productToUpdate.ProductQuantity;
+
+        if (fetchedCartProduct.ProductQuantity <= 0)
+        {
+            dbContext.CartProduct.Remove(fetchedCartProduct);
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return fetchedCartProduct;
     }
 
     public async Task<CartProduct> AddProductToCartProduct(int productId, string userName)

@@ -20,8 +20,4 @@
     <PackageReference Include="Radzen.Blazor" Version="4.16.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Profile\" />
-  </ItemGroup>
-
 </Project>

@@ -11,7 +11,7 @@
                     @string.Format(cultureInfo, "{0:C}", CartProducts.Product.Price)
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="Entities.CartProduct" Property="ProductQuantity" Title="Quantity">
+            @* <RadzenDataGridColumn TItem="Entities.CartProduct" Property="ProductQuantity" Title="Quantity">
                 <Template Context="CartProducts">
                     <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false" style="padding: 0; padding-right: 3px">
                         <i class="bi bi-dash-square-fill" @onclick="() => DecreaseQuantity(CartProducts)"></i>
@@ -20,6 +20,14 @@
                     <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false" style="padding: 0; padding-left: 3px">
                         <i class="bi bi-plus-square-fill" @onclick="() => IncreaseQuantity(CartProducts)"></i>
                     </a>
+                </Template>
+            </RadzenDataGridColumn> *@
+            <RadzenDataGridColumn TItem="Entities.CartProduct" Property="ProductQuantity" Title="Quantity">
+                <Template Context="cartProduct">
+                    @{
+                        int newQuantity = cartProduct.ProductQuantity;
+                    }
+                    <RadzenNumeric TValue="int" Value="@cartProduct.ProductQuantity" Min="0" Change="@(args => UpdateQuantity(cartProduct, args))" Style="width: 25%" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>

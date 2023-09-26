@@ -88,4 +88,14 @@ public partial class CartPage : ComponentBase
             NavigationManager.NavigateTo("/Cart", true);
         }
     }
+
+    private async void UpdateQuantity(CartProduct productToDecrease, int newValue)
+    {
+        productToDecrease.ProductQuantity=newValue;
+        var quantityDecreaseSuccessfull = await CartProductService.UpdateQuantityForProductInCart(productToDecrease);
+        if(quantityDecreaseSuccessfull.ProductQuantity <= 0)
+        {
+            NavigationManager.NavigateTo("/Cart", true);
+        }
+    }
 }
