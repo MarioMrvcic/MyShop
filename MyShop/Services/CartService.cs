@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using MyShop.Data;
 using MyShop.Entities;
 using MyShop.Interfaces;
@@ -7,44 +9,46 @@ namespace MyShop.Services;
 
 public class CartService : ICartService
 {
-    private readonly AplicationDbContext _aplicationdbcontext;
+    private readonly IDbContextFactory<AplicationDbContext> _dbContextFactory;
 
-    public CartService(AplicationDbContext aplicationdbcontext)
+    public CartService(IDbContextFactory<AplicationDbContext> dbContextFactory)
     {
-        _aplicationdbcontext = aplicationdbcontext;
+        _dbContextFactory = dbContextFactory;
     }
 
-    public async Task<List<Cart>> GetCarts()
+    [Inject]
+    public IUserService UserService { get; set; }
+    [Inject]
+    public IProductService ProductService { get; set; }
+
+    public async Task<List<Cart>> GetAllCarts()
     {
-        var carts = await _aplicationdbcontext.Carts.ToListAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var carts = await dbContext.Carts.ToListAsync();
         return carts;
     }
 
     public async Task<Cart> CreateNewCart(ShopAppWebUser shopAppWebUser)
     {
-        Cart cart = new Cart();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        Cart cart = new();
         cart.CartStatus = CartStatus.INPROGRESS;
         cart.ShopAppWebUser = shopAppWebUser;
 
-        await _aplicationdbcontext.Carts.AddAsync(cart);
-        await _aplicationdbcontext.SaveChangesAsync();
+        await dbContext.Carts.AddAsync(cart);
+        await dbContext.SaveChangesAsync();
 
         return cart;
     }
 
-    public async Task<bool> AddProductToCart(int productId, string userName)
+    public async Task<Cart> GetUserCurrentCart(ShopAppWebUser user)
     {
-        var userId = await _aplicationdbcontext.Users.SingleOrDefaultAsync(u => u.UserName == userName);
-        var cartToAddIn = await _aplicationdbcontext.Carts.SingleOrDefaultAsync(u => u.ShopAppWebUser == userId);
-        var cartId = cartToAddIn.Id;
+        await using var dbContext = _dbContextFactory.CreateDbContext();
 
-        if (cartToAddIn != null)
-        {
+        var cart = await dbContext.Carts.SingleOrDefaultAsync(c => c.ShopAppWebUser == user && c.CartStatus == 0);
 
-
-            return true;
-        }
-
-        return false;
+        return cart;
     }
 }

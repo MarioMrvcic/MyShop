@@ -25,7 +25,7 @@ public class AplicationDbContext : IdentityDbContext<ShopAppWebUser>
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Category>().HasData(DataBaseInitialization.ReturnCategories());
 
-        //modelBuilder.Entity<CartProduct>().HasKey(cp => new { cp.CartId, cp.ProductsId});
+        modelBuilder.Entity<CartProduct>().HasKey(cp => new { cp.CartId, cp.ProductsId});
 
         modelBuilder.Entity<Cart>().HasMany(c => c.Products).WithOne(c => c.Cart).HasForeignKey(c => c.CartId).OnDelete(DeleteBehavior.Cascade);
 

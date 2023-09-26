@@ -7,30 +7,36 @@ namespace MyShop.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly AplicationDbContext _aplicationdbcontext;
+    private readonly IDbContextFactory<AplicationDbContext> _dbContextFactory;
 
-    public CategoryService(AplicationDbContext aplicationdbcontext)
+    public CategoryService(IDbContextFactory<AplicationDbContext> dbContextFactory)
     {
-        _aplicationdbcontext = aplicationdbcontext;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<List<Category>> GetCategoriesAsync()
     {
-        var categories = await _aplicationdbcontext.Categories.ToListAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var categories = await dbContext.Categories.ToListAsync();
         return categories;
     }
 
     public async Task<Category?> GetCategoryByIdAsync(int id)
     {
-        var category = await _aplicationdbcontext.Categories.Where(c => c.Id == id).SingleOrDefaultAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var category = await dbContext.Categories.Where(c => c.Id == id).SingleOrDefaultAsync();
         return category;
 
     }
 
     public async Task<Category> AddCategory(Category category)
     {
-        await _aplicationdbcontext.Categories.AddAsync(category);
-        await _aplicationdbcontext.SaveChangesAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        await dbContext.Categories.AddAsync(category);
+        await dbContext.SaveChangesAsync();
 
         return category;
 
@@ -38,7 +44,9 @@ public class CategoryService : ICategoryService
 
     public async Task<Category> UpdateCategory(int id, Category category)
     {
-        var existingCategory = await _aplicationdbcontext.Categories.Where(c => c.Id == id).SingleOrDefaultAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var existingCategory = await dbContext.Categories.Where(c => c.Id == id).SingleOrDefaultAsync();
 
         if (existingCategory == null)
         {
@@ -48,7 +56,7 @@ public class CategoryService : ICategoryService
         existingCategory.Name = category.Name;
         existingCategory.DisplayOrder = category.DisplayOrder;
 
-        await _aplicationdbcontext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return category;
 
@@ -56,30 +64,36 @@ public class CategoryService : ICategoryService
 
     public async Task<bool> DeleteCategory(int id)
     {
-        var categoryToDelete = await _aplicationdbcontext.Categories.Where(c => c.Id == id).SingleOrDefaultAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var categoryToDelete = await dbContext.Categories.Where(c => c.Id == id).SingleOrDefaultAsync();
 
         if (categoryToDelete == null)
         {
             return false;
         }
 
-        _aplicationdbcontext.Categories.Remove(categoryToDelete);
+        dbContext.Categories.Remove(categoryToDelete);
 
-        await _aplicationdbcontext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return true;
     }
 
     public async Task<bool> CheckCategoryName(string name)
     {
-        var nameToCheck = await _aplicationdbcontext.Categories.Where(c => c.Name == name).AnyAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var nameToCheck = await dbContext.Categories.Where(c => c.Name == name).AnyAsync();
 
         return !nameToCheck;
     }
 
     public async Task<bool> CheckCategoryDisplayOrder(int diplayOrder)
     {
-        var displayOrderToCheck = await _aplicationdbcontext.Categories.Where(c => c.DisplayOrder == diplayOrder).AnyAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var displayOrderToCheck = await dbContext.Categories.Where(c => c.DisplayOrder == diplayOrder).AnyAsync();
 
         return !displayOrderToCheck;
     }

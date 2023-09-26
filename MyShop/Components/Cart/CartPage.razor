@@ -1,12 +1,37 @@
 ﻿@page "/Cart"
 
-@if (userIsLoggedIn)
+@if (userIsLoggedIn && !updatingData)
 {
-    <h1>Ulogiran</h1>
+    <RadzenDataGrid Data="@CartProducts" TItem="Entities.CartProduct" Density="@Density.Default" AllowPaging="true" AllowSorting="true">
+        <Columns>
+            <RadzenDataGridColumn TItem="Entities.CartProduct" Property="Product.Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Entities.CartProduct" Property="Product.BrandName" Title="BrandName" />
+            <RadzenDataGridColumn TItem="Entities.CartProduct" Property="Product.Price" Title="Price per Unit">
+                <Template Context="CartProducts">
+                    @string.Format(cultureInfo, "{0:C}", CartProducts.Product.Price)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Entities.CartProduct" Property="ProductQuantity" Title="Quantity">
+                <Template Context="CartProducts">
+                    <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false" style="padding: 0; padding-right: 3px">
+                        <i class="bi bi-dash-square-fill" @onclick="() => DecreaseQuantity(CartProducts)"></i>
+                    </a>
+                    <span>@CartProducts.ProductQuantity</span>
+                    <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false" style="padding: 0; padding-left: 3px">
+                        <i class="bi bi-plus-square-fill" @onclick="() => IncreaseQuantity(CartProducts)"></i>
+                    </a>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+}
+else if(updatingData)
+{
+    <h1>Loading....</h1>
 }
 else
 {
-   <h1>Košarica je nedostupna</h1>
+    <h1>Cart unavailable, log in to continue...</h1>
 }
 
 

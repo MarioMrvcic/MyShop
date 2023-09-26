@@ -12,8 +12,8 @@ using MyShop.Data;
 namespace MyShop.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    [Migration("20230925122441_AddedCart")]
-    partial class AddedCart
+    [Migration("20230925160117_CartAdded")]
+    partial class CartAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,13 +188,13 @@ namespace MyShop.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductQuantity")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductsId")
                         .HasColumnType("int");
 
-                    b.HasKey("CartId");
+                    b.Property<int>("ProductQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartId", "ProductsId");
 
                     b.HasIndex("ProductsId");
 

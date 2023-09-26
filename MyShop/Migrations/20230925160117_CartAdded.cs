@@ -5,7 +5,7 @@
 namespace MyShop.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedCart : Migration
+    public partial class CartAdded : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,7 +39,7 @@ namespace MyShop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CartProduct", x => x.CartId);
+                    table.PrimaryKey("PK_CartProduct", x => new { x.CartId, x.ProductsId });
                     table.ForeignKey(
                         name: "FK_CartProduct_Carts_CartId",
                         column: x => x.CartId,

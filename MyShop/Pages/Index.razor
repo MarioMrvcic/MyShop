@@ -33,7 +33,7 @@
                     <RadzenButton Variant="Variant.Text" Text="Update" Click=@(args => UpdateProduct(product.Id)) />
                 </AuthorizeView>
                 <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Text="Details" Click=@(args => GoToProductDetails(product.Id)) />
-                <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Text="Add to cart" Click=@(args => AddProductToCart(product.Id)) />
+                <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Text="Add to cart" Click=@(args => AddProductToCartProduct(product.Id)) />
             </RadzenStack>
         </RadzenCard>
     }

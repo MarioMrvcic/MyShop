@@ -7,42 +7,52 @@ namespace MyShop.Services;
 
 public class ProductService : IProductService
 {
-    private readonly AplicationDbContext _aplicationdbcontext;
+    private readonly IDbContextFactory<AplicationDbContext> _dbContextFactory;
 
-    public ProductService(AplicationDbContext aplicationdbcontext)
+    public ProductService(IDbContextFactory<AplicationDbContext> dbContextFactory)
     {
-        _aplicationdbcontext = aplicationdbcontext;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<List<Product>> GetProductsAsync()
     {
-        var products = await _aplicationdbcontext.Products.Include((p) => p.Category).ToListAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var products = await dbContext.Products.Include((p) => p.Category).ToListAsync();
         return products;
     }
 
     public async Task<List<Product>> GetProductByCategory(int categoryId)
     {
-        var productsWithCategoryId = await _aplicationdbcontext.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var productsWithCategoryId = await dbContext.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
         return productsWithCategoryId;
     }
 
     public async Task<Product?> GetProductByIdAsync(int id)
     {
-        var products = await _aplicationdbcontext.Products.Where(c => c.Id == id).SingleOrDefaultAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var products = await dbContext.Products.Where(c => c.Id == id).SingleOrDefaultAsync();
         return products;
     }
 
     public async Task<Product> AddProduct(Product product)
     {
-        await _aplicationdbcontext.Products.AddAsync(product);
-        await _aplicationdbcontext.SaveChangesAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        await dbContext.Products.AddAsync(product);
+        await dbContext.SaveChangesAsync();
 
         return product;
     }
 
     public async Task<Product> UpdateProduct(int id, Product product)
     {
-        var existingProduct = await _aplicationdbcontext.Products.Where(c => c.Id == id).SingleOrDefaultAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var existingProduct = await dbContext.Products.Where(c => c.Id == id).SingleOrDefaultAsync();
 
         if (existingProduct == null)
         {
@@ -56,23 +66,24 @@ public class ProductService : IProductService
         existingProduct.CategoryId = product.CategoryId;
         existingProduct.AssociatedImage = product.AssociatedImage;
 
-        await _aplicationdbcontext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return product;
     }
 
     public async Task<bool> DeleteProduct(int id)
     {
-        var productToDelete = await _aplicationdbcontext.Products.Where(c => c.Id == id).SingleOrDefaultAsync();
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var productToDelete = await dbContext.Products.Where(c => c.Id == id).SingleOrDefaultAsync();
 
         if (productToDelete == null)
         {
             return false;
         }
 
-        _aplicationdbcontext.Products.Remove(productToDelete);
-
-        await _aplicationdbcontext.SaveChangesAsync();
+        dbContext.Products.Remove(productToDelete);
+        await dbContext.SaveChangesAsync();
 
         return true;
     }

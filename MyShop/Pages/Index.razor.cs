@@ -6,6 +6,7 @@ using Radzen.Blazor;
 using Radzen;
 using System.Security.Claims;
 using MyShop.Services;
+using MyShop.Components.Product;
 
 namespace MyShop.Pages
 {
@@ -16,11 +17,13 @@ namespace MyShop.Pages
         [Inject]
         public IProductService ProductService { get; set; }
         [Inject]
-        public ICartService CartService { get; set; }
+        public ICartProductService CartProductService { get; set; }
         [Inject]
         public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
         [Inject]
         public DialogService DialogService { get; set; }
+        [Inject]
+        public NotificationService NotificationService { get; set; }
 
         public List<Product>? Products { get; set; } = new();
 
@@ -54,19 +57,28 @@ namespace MyShop.Pages
             NavigationManager.NavigateTo($"products/UpdateProduct/{productId}");
         }
 
-        private async void AddProductToCart(int productId)
+        private async void AddProductToCartProduct(int productId)
         {
             if (userIsLoggedIn)
             {
-                CartService.AddProductToCart(productId, userName);
+                var addedProductToCart = await CartProductService.AddProductToCartProduct(productId, userName);
+                if (addedProductToCart is not null)
+                {
+                    ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Proizvod dodan u košaricu", Detail = "", Duration = 4000 });
+                }
             }
             else
             {
-                var confirmAdd = await DialogService.Confirm($"Please login to add products to cart", "Confirm", new ConfirmOptions() { OkButtonText = "Login", CancelButtonText = "Home" });
+                var confirmAdd = await DialogService.Confirm($"Please log into your account to add products to cart", "You are not logged in", new ConfirmOptions() { OkButtonText = "Login", CancelButtonText = "Ok" });
                 if (confirmAdd == true) {
                     NavigationManager.NavigateTo("identity/account/login", true);
                 }
             }
+        }
+
+        void ShowNotification(NotificationMessage message)
+        {
+            NotificationService.Notify(message);
         }
     }
 }

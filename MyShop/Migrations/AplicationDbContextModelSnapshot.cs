@@ -185,13 +185,13 @@ namespace MyShop.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductQuantity")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductsId")
                         .HasColumnType("int");
 
-                    b.HasKey("CartId");
+                    b.Property<int>("ProductQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartId", "ProductsId");
 
                     b.HasIndex("ProductsId");
 
