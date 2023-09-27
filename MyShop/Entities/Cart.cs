@@ -6,6 +6,9 @@ public class Cart
 
     public CartStatus CartStatus { get; set; }
 
+    public DateTime? FinishedCartOnDate { get; set; }
+
+    public decimal CartCost { get; set; }
 
     public string ShopAppWebUserId { get; set; } 
 

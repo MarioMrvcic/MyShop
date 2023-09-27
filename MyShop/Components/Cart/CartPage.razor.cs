@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MyShop.Entities;
 using MyShop.Interfaces;
 using MyShop.Services;
+using Radzen;
 using System.Globalization;
 using System.Security.Claims;
 
@@ -22,6 +23,10 @@ public partial class CartPage : ComponentBase
     public NavigationManager NavigationManager { get; set; }
     [Inject]
     public IUserService UserService { get; set; }
+    [Inject]
+    public DialogService DialogService { get; set; }
+    [Inject]
+    public NotificationService NotificationService { get; set; }
 
     //current user name
     string userName;
@@ -38,6 +43,17 @@ public partial class CartPage : ComponentBase
     //making sure no funky stuff happens when adding and removing items
     bool updatingData;
 
+    //sum that will be saved to cart
+    decimal cartSum=0;
+
+    //alert
+    Variant variant = Variant.Filled;
+    AlertSize size = AlertSize.Medium;
+    AlertStyle alertStyle = AlertStyle.Primary;
+
+    //curent user cart
+    public Entities.Cart userCart = new();
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -52,13 +68,20 @@ public partial class CartPage : ComponentBase
             userName = userClaimsPrincipal.Identity.Name;
             var user = await UserService.GetUserByNameAsync(userName);
 
-            var userCart = await CartService.GetUserCurrentCart(user);
+            userCart = await CartService.GetUserCurrentCart(user);
             CartProducts = await CartProductService.GetAllCartProductEntriesForCartAsync(userCart);
 
             foreach(CartProduct cp in CartProducts)
             {
                 cp.Product = await ProductService.GetProductByIdAsync(cp.ProductsId);
             }
+
+            foreach(var cartProduct in CartProducts)
+            {
+                cartSum += cartProduct.ProductQuantity * cartProduct.Product.Price.Value;
+            }
+            userCart.CartCost = cartSum;
+            var SavedCartSum = await CartService.SaveCartSum(userCart);
         }
 
     }
@@ -69,33 +92,37 @@ public partial class CartPage : ComponentBase
     }
 
 
-    private async void IncreaseQuantity(CartProduct productToIncrease)
+    private async void UpdateQuantity(CartProduct productToUpdate, int newValue)
     {
-        updatingData = true;
-        var quantityIncreaseSuccessfull = await CartProductService.IncreaseQuantityForProductInCart(productToIncrease);
-        updatingData = false;
-        NavigationManager.NavigateTo("/Cart", true);
-    }
-
-    private async void DecreaseQuantity(CartProduct productToDecrease)
-    {
-        updatingData = true;
-        var quantityDecreaseSuccessfull = await CartProductService.DecreaseQuantityForProductInCart(productToDecrease);
-        updatingData = false;
-        NavigationManager.NavigateTo("/Cart", true);
-        if (productToDecrease.ProductQuantity <= 0)
-        {
-            NavigationManager.NavigateTo("/Cart", true);
-        }
-    }
-
-    private async void UpdateQuantity(CartProduct productToDecrease, int newValue)
-    {
-        productToDecrease.ProductQuantity=newValue;
-        var quantityDecreaseSuccessfull = await CartProductService.UpdateQuantityForProductInCart(productToDecrease);
+        cartSum += (newValue-productToUpdate.ProductQuantity) * productToUpdate.Product.Price.Value;
+        userCart.CartCost = cartSum;
+        var SavedCartSum = await CartService.SaveCartSum(userCart);
+        productToUpdate.ProductQuantity=newValue;
+        var quantityDecreaseSuccessfull = await CartProductService.UpdateQuantityForProductInCart(productToUpdate);
         if(quantityDecreaseSuccessfull.ProductQuantity <= 0)
         {
             NavigationManager.NavigateTo("/Cart", true);
         }
     }
+
+
+    private async void Checkout()
+    {
+
+        var confirmCheckout = await DialogService.Confirm($"Are you sure you want to checkout with a total of ${cartSum}", "Confirm Checkout", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (confirmCheckout.GetValueOrDefault())
+        {
+            var finishedCart = await CartService.LockCart(userCart);
+            var newUserCart = await CartService.CreateNewCart(userName);
+            userCart = newUserCart;
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Order saved", Detail = "", Duration = 4000 });
+            NavigationManager.NavigateTo("/Cart", true);
+        }
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+    }
+
 }

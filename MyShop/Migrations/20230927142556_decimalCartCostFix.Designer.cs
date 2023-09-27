@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyShop.Data;
 
@@ -11,9 +12,11 @@ using MyShop.Data;
 namespace MyShop.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230927142556_decimalCartCostFix")]
+    partial class decimalCartCostFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,7 +183,7 @@ namespace MyShop.Migrations
 
                     b.HasIndex("ShopAppWebUserId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("MyShop.Entities.CartProduct", b =>
@@ -198,7 +201,7 @@ namespace MyShop.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CartProduct", (string)null);
+                    b.ToTable("CartProduct");
                 });
 
             modelBuilder.Entity("MyShop.Entities.Category", b =>
@@ -218,7 +221,7 @@ namespace MyShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -279,7 +282,7 @@ namespace MyShop.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("MyShop.Entities.ShopAppWebUser", b =>

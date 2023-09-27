@@ -146,6 +146,7 @@ namespace MyShop.Areas.Identity.Pages.Account
                 user.Address = Input.Address;
                 user.City = Input.City;
                 user.PostalCode = Input.PostalCode;
+                user.UserCreatedDate = DateTime.Now;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

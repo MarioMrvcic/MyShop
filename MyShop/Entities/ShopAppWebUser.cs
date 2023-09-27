@@ -17,5 +17,7 @@ public class ShopAppWebUser : IdentityUser
     [Required]
     public int? PostalCode { get; set; }
 
+    public DateTime UserCreatedDate { get; set; }
+
     public List<Cart>? Carts { get; set; }
 }

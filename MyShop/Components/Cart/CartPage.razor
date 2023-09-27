@@ -11,17 +11,6 @@
                     @string.Format(cultureInfo, "{0:C}", CartProducts.Product.Price)
                 </Template>
             </RadzenDataGridColumn>
-            @* <RadzenDataGridColumn TItem="Entities.CartProduct" Property="ProductQuantity" Title="Quantity">
-                <Template Context="CartProducts">
-                    <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false" style="padding: 0; padding-right: 3px">
-                        <i class="bi bi-dash-square-fill" @onclick="() => DecreaseQuantity(CartProducts)"></i>
-                    </a>
-                    <span>@CartProducts.ProductQuantity</span>
-                    <a href="Cart" class="btn custom-button" type="button" aria-haspopup="true" aria-expanded="false" style="padding: 0; padding-left: 3px">
-                        <i class="bi bi-plus-square-fill" @onclick="() => IncreaseQuantity(CartProducts)"></i>
-                    </a>
-                </Template>
-            </RadzenDataGridColumn> *@
             <RadzenDataGridColumn TItem="Entities.CartProduct" Property="ProductQuantity" Title="Quantity">
                 <Template Context="cartProduct">
                     @{
@@ -32,6 +21,16 @@
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
+    <RadzenCard Class="mt-4" Style="display: inline-block">
+        <div class="p-3">
+            <h4 class="mb-3">Order summary:</h4>
+            <div class="d-flex align-items-center" style="margin-left: 0.5rem">
+                <p>Total cart cost: @string.Format(cultureInfo, "{0:C}", cartSum)</p>
+                <RadzenButton Click=@(() => Checkout()) Text="Checkout" ButtonStyle="ButtonStyle.Primary" Style="margin-left: 2rem" />
+            </div>
+        </div>
+    </RadzenCard>
+
 }
 else if(updatingData)
 {

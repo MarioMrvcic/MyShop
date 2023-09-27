@@ -51,4 +51,29 @@ public class CartService : ICartService
 
         return cart;
     }
+
+    public async Task<decimal> SaveCartSum(Cart cartNewValue)
+    {
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var cartToUpdate = await dbContext.Carts.SingleOrDefaultAsync(c => c.Id == cartNewValue.Id);
+        cartToUpdate.CartCost = cartNewValue.CartCost;
+
+        await dbContext.SaveChangesAsync();
+
+        return cartNewValue.CartCost;
+    }
+
+    public async Task<Cart> LockCart(Cart cartToLock)
+    {
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var cartToUpdate = await dbContext.Carts.SingleOrDefaultAsync(c => c.Id == cartToLock.Id);
+        cartToUpdate.CartStatus = CartStatus.FINISHED;
+        cartToUpdate.FinishedCartOnDate = DateTime.Now;
+
+        await dbContext.SaveChangesAsync();
+
+        return cartToUpdate;
+    }
 }
