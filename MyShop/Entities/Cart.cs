@@ -6,6 +6,9 @@ public class Cart
 
     public CartStatus CartStatus { get; set; }
 
+
+    public string ShopAppWebUserId { get; set; } 
+
     public ShopAppWebUser? ShopAppWebUser { get; set; }
 
     public List<CartProduct>? Products { get; set; }

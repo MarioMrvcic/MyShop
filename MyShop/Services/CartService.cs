@@ -29,13 +29,13 @@ public class CartService : ICartService
         return carts;
     }
 
-    public async Task<Cart> CreateNewCart(ShopAppWebUser shopAppWebUser)
+    public async Task<Cart> CreateNewCart(string shopAppWebUserId)
     {
         await using var dbContext = _dbContextFactory.CreateDbContext();
 
         Cart cart = new();
         cart.CartStatus = CartStatus.INPROGRESS;
-        cart.ShopAppWebUser = shopAppWebUser;
+        cart.ShopAppWebUserId = shopAppWebUserId;
 
         await dbContext.Carts.AddAsync(cart);
         await dbContext.SaveChangesAsync();

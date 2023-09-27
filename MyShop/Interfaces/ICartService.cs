@@ -6,7 +6,7 @@ public interface ICartService
 {
     Task<List<Cart>> GetAllCarts();
 
-    Task<Cart> CreateNewCart(ShopAppWebUser shopAppWebUser);
+    Task<Cart> CreateNewCart(string shopAppWebUserId);
 
     Task<Cart> GetUserCurrentCart(ShopAppWebUser user);
 }

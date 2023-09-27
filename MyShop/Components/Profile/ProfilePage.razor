@@ -1,5 +1,46 @@
-﻿<h3>ProfilePage</h3>
+﻿@page "/Profile"
 
-@code {
-
+@if (userIsLoggedIn)
+{
+    <RadzenRow JustifyContent="@JustifyContent.Stretch" AlignItems="@AlignItems.Normal" Gap="1.5rem" class="rz-border-info-light" Style="height: 100vh; border: none">
+        <RadzenColumn Size="3">
+            <RadzenCard Class="mt-0" Style="max-width: 420px; background-color: lightgrey">
+                <h3 class="mb-4">User info:</h3>
+                <div class="mb-4">
+                    <p><strong>User Name:</strong></p>
+                    <p>@user.UserName</p>
+                </div>
+                <div class="mb-4">
+                    <p><strong>Last Name:</strong></p>
+                    <p>@user.LastName</p>
+                </div>
+                <div class="mb-4">
+                    <p><strong>Address:</strong></p>
+                    <p>@user.Address</p>
+                </div>
+                <div class="mb-4">
+                    <p><strong>City:</strong></p>
+                    <p>@user.City</p>
+                </div>
+                <div class="mb-4">
+                    <p><strong>Postal Code:</strong></p>
+                    <p>@user.PostalCode</p>
+                </div>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="9">
+            <h3 class="mb-4">Past user orders:</h3>
+            <RadzenDataGrid Data="products" TItem="Entities.Category" Density="@Density.Default" AllowPaging="true" AllowSorting="true">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Entities.Category" Property="Id" Title="Name" />
+                    <RadzenDataGridColumn TItem="Entities.Category" Property="Name" Title="BrandName" />
+                    <RadzenDataGridColumn TItem="Entities.Category" Property="DisplayOrder" Title="Price per Unit" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenColumn>
+    </RadzenRow>
+}
+else
+{
+    <h1>Profile unavailable, log in to continue...</h1>
 }

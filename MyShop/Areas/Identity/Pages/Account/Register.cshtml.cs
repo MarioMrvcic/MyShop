@@ -148,8 +148,6 @@ namespace MyShop.Areas.Identity.Pages.Account
                 user.PostalCode = Input.PostalCode;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                //dodavanje novog carta kod kreacije
-                var cart = await _cartService.CreateNewCart(user);
 
                 if (result.Succeeded)
                 {
@@ -168,6 +166,9 @@ namespace MyShop.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                    //dodavanje novog carta kod kreacije
+                    var cart = await _cartService.CreateNewCart(user.Id);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

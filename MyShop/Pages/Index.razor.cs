@@ -64,7 +64,7 @@ namespace MyShop.Pages
                 var addedProductToCart = await CartProductService.AddProductToCartProduct(productId, userName);
                 if (addedProductToCart is not null)
                 {
-                    ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Proizvod dodan u košaricu", Detail = "", Duration = 4000 });
+                    ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Product added to cart", Detail = "", Duration = 4000 });
                 }
             }
             else
