@@ -52,7 +52,7 @@ public partial class UpdateProduct : ComponentBase
         if (addedProduct is not null)
         {
             NavigationManager.NavigateTo("/products");
-            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success Summary", Detail = "Success Detail", Duration = 4000 });
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Product updated", Duration = 4000 });
         }
     }
 

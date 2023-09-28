@@ -35,7 +35,7 @@ public partial class UpdateCategory : ComponentBase
         if (addedCategory is not null)
         {
             NavigationManager.NavigateTo("/categories");
-            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success Summary", Detail = "Success Detail", Duration = 4000 });
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Category updated", Duration = 4000 });
         }
     }
 

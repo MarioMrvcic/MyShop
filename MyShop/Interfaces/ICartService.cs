@@ -13,4 +13,6 @@ public interface ICartService
     Task<decimal> SaveCartSum(Cart cartNewValue);
 
     Task<Cart> LockCart(Cart cartToLock);
+
+    Task<List<Cart>> GetAllUserPastCarts(string userId);
 }

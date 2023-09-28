@@ -38,7 +38,7 @@ public partial class CartPage : ComponentBase
     public List<Entities.CartProduct> CartProducts { get; set; } = new();
 
     //valuta
-    CultureInfo cultureInfo = new("fr-FR");
+    public CultureInfo cultureInfo = new("fr-FR");
 
     //making sure no funky stuff happens when adding and removing items
     bool updatingData;
@@ -54,6 +54,9 @@ public partial class CartPage : ComponentBase
     //curent user cart
     public Entities.Cart userCart = new();
 
+    //curent user
+    public Entities.ShopAppWebUser user = new();
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -66,7 +69,7 @@ public partial class CartPage : ComponentBase
         if (userIsLoggedIn)
         {
             userName = userClaimsPrincipal.Identity.Name;
-            var user = await UserService.GetUserByNameAsync(userName);
+            user = await UserService.GetUserByNameAsync(userName);
 
             userCart = await CartService.GetUserCurrentCart(user);
             CartProducts = await CartProductService.GetAllCartProductEntriesForCartAsync(userCart);
@@ -113,7 +116,7 @@ public partial class CartPage : ComponentBase
         if (confirmCheckout.GetValueOrDefault())
         {
             var finishedCart = await CartService.LockCart(userCart);
-            var newUserCart = await CartService.CreateNewCart(userName);
+            var newUserCart = await CartService.CreateNewCart(user.Id);
             userCart = newUserCart;
             ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Order saved", Detail = "", Duration = 4000 });
             NavigationManager.NavigateTo("/Cart", true);

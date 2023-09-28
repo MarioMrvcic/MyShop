@@ -15,9 +15,18 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Profile" Match="NavLinkMatch.All">
-                <span class="bi bi-person-fill" aria-hidden="true" style="font-size: 17.6px; width: 32px;"></span> My Profile
-            </NavLink>
+            <AuthorizeView Roles="Admin,User">
+                <Authorized>
+                    <NavLink class="nav-link" href="Profile" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-fill" aria-hidden="true" style="font-size: 17.6px; width: 32px;"></span> My Profile
+                    </NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link" href="identity/account/login" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-fill" aria-hidden="true" style="font-size: 17.6px; width: 32px;"></span> My Profile
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
         <CascadingAuthenticationState>
             <AuthorizeView Roles="Admin">

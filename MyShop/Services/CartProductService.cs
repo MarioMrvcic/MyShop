@@ -119,4 +119,13 @@ public class CartProductService : ICartProductService
 
         return returnListOfEntries;
     }
+
+    public async Task<List<CartProduct>> GetAllCartProductEntriesForCartByCartIdAsync(int cartId)
+    {
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var returnListOfEntries = await dbContext.CartProduct.Where(cp => cp.CartId == cartId).ToListAsync();
+
+        return returnListOfEntries;
+    }
 }

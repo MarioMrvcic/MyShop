@@ -7,8 +7,8 @@
             <RadzenCard Class="mt-0" Style="max-width: 420px; background-color: lightgrey">
                 <h3 class="mb-4">User info:</h3>
                 <div class="mb-4">
-                    <p><strong>User Name:</strong></p>
-                    <p>@user.UserName</p>
+                    <p><strong>Name:</strong></p>
+                    <p>@user.Name</p>
                 </div>
                 <div class="mb-4">
                     <p><strong>Last Name:</strong></p>
@@ -26,15 +26,21 @@
                     <p><strong>Postal Code:</strong></p>
                     <p>@user.PostalCode</p>
                 </div>
+                <button type="button" class="btn btn-secondary" @onclick="() => UpdateProfile()">UpdateProfile</button>
             </RadzenCard>
         </RadzenColumn>
         <RadzenColumn Size="9">
             <h3 class="mb-4">Past user orders:</h3>
-            <RadzenDataGrid Data="products" TItem="Entities.Category" Density="@Density.Default" AllowPaging="true" AllowSorting="true">
+            <RadzenDataGrid Data="pastUserCarts" TItem="Entities.Cart" Density="@Density.Default" AllowPaging="true" AllowSorting="true">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Entities.Category" Property="Id" Title="Name" />
-                    <RadzenDataGridColumn TItem="Entities.Category" Property="Name" Title="BrandName" />
-                    <RadzenDataGridColumn TItem="Entities.Category" Property="DisplayOrder" Title="Price per Unit" />
+                    <RadzenDataGridColumn TItem="Entities.Cart" Property="Id" Title="Ref. number" />
+                    <RadzenDataGridColumn TItem="Entities.Cart" Property="CartCost" Title="Cost" />
+                    <RadzenDataGridColumn TItem="Entities.Cart" Property="FinishedCartOnDate" Title="Order date and time" />
+                    <RadzenDataGridColumn TItem="Entities.Cart">
+                        <Template Context="cart">
+                            <button type="button" class="btn btn-secondary" @onclick="() => GetCartDetails(cart.Id)">See details</button>
+                        </Template>
+                    </RadzenDataGridColumn>
                 </Columns>
             </RadzenDataGrid>
         </RadzenColumn>

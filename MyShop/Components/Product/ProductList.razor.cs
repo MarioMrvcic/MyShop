@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MyShop.Entities;
 using MyShop.Interfaces;
+using MyShop.Services;
 using Radzen;
 using System.Globalization;
 
@@ -11,6 +13,10 @@ public partial class ProductList : ComponentBase
     public IProductService ProductService { get; set; }
     [Inject]
     public NavigationManager NavigationManager { get; set; }
+    [Inject]
+    public DialogService DialogService { get; set; }
+    [Inject]
+    public NotificationService NotificationService { get; set; }
 
 
     //valuta
@@ -58,9 +64,13 @@ public partial class ProductList : ComponentBase
 
     private async void DeleteProduct(int productId)
     {
-        ShowAlertWhenDeleting = true;
-        var DeletSucces = await ProductService.DeleteProduct(productId);
-        ShowAlertWhenDeleting = false;
-        NavigationManager.NavigateTo($"products", true);
+        var confirmDelete = await DialogService.Confirm($"Delete item with id {SelectedRow[0].Id}?", "Confirm", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (confirmDelete.GetValueOrDefault())
+        {
+            ShowAlertWhenDeleting = true;
+            var DeletSucces = await ProductService.DeleteProduct(productId);
+            ShowAlertWhenDeleting = false;
+            NavigationManager.NavigateTo($"products", true);
+        }
     }
 }

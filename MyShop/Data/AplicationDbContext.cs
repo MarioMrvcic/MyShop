@@ -33,6 +33,5 @@ public class AplicationDbContext : IdentityDbContext<ShopAppWebUser>
 
         modelBuilder.Entity<Product>().HasMany(c => c.Carts).WithOne(c => c.Product).HasForeignKey(c => c.ProductsId).OnDelete(DeleteBehavior.Cascade);
 
-
     }
 }

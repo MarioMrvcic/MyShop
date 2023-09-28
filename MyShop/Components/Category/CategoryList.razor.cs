@@ -14,6 +14,8 @@ public partial class CategoryList : ComponentBase
     public NavigationManager NavigationManager { get; set; }
     [Inject]
     public DialogService DialogService { get; set; }
+    [Inject]
+    public NotificationService NotificationService { get; set; }
 
     public List<Entities.Category>? Categories { get; set; }
     private IList<Entities.Category>? SelectedRow = null;
@@ -70,7 +72,7 @@ public partial class CategoryList : ComponentBase
                 {
                     names += product.Name + Environment.NewLine;
                 }
-                DialogService.Alert($"Category has products: \n {names}", "Error!", new AlertOptions() { OkButtonText = "Ok" });
+                DialogService.Alert($"Category has products, delete them and try again!!!!", "Error!", new AlertOptions() { OkButtonText = "Ok" });
             }
             else
             {

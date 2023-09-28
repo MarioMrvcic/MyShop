@@ -1,0 +1,16 @@
+﻿@page "/Order/{cartId:int}"
+
+<h3>Order Details:</h3>
+
+<RadzenDataGrid Data="@CartProducts" TItem="Entities.CartProduct" Density="@Density.Default" AllowPaging="true" AllowSorting="true">
+    <Columns>
+        <RadzenDataGridColumn TItem="Entities.CartProduct" Property="Product.Name" Title="Name" />
+        <RadzenDataGridColumn TItem="Entities.CartProduct" Property="Product.BrandName" Title="BrandName" />
+        <RadzenDataGridColumn TItem="Entities.CartProduct" Property="Product.Price" Title="Price per Unit">
+            <Template Context="CartProducts">
+                @string.Format(cultureInfo, "{0:C}", CartProducts.Product.Price)
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Entities.CartProduct" Property="ProductQuantity" Title="Quantity" />
+    </Columns>
+</RadzenDataGrid>

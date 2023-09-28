@@ -17,13 +17,16 @@ namespace MyShop.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ShopAppWebUser> _userManager;
         private readonly SignInManager<ShopAppWebUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public IndexModel(
             UserManager<ShopAppWebUser> userManager,
-            SignInManager<ShopAppWebUser> signInManager)
+            SignInManager<ShopAppWebUser> signInManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -59,20 +62,44 @@ namespace MyShop.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            [Required]
+            public string Name { get; set; }
+            [Required]
+            public string LastName { get; set; }
+            [Required]
+            public string Address { get; set; }
+            [Required]
+            public string City { get; set; }
+            [Required]
+            public int? PostalCode { get; set; }
+            public string? Role { get; set; }
         }
 
         private async Task LoadAsync(ShopAppWebUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            //admin roles[0]
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Name = user.Name,
+                LastName = user.LastName,
+                Address = user.Address,
+                City = user.City,
+                PostalCode = user.PostalCode,
+                Role = roles[0]
             };
         }
+
+        public List<IdentityRole> Roles { get; set; }
+        public bool IsAdmin { get; set; } = false;
+        public string UserName { get; set; }
+        public ShopAppWebUser user { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -88,12 +115,12 @@ namespace MyShop.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
+            user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
+            ViewData["User"] = user.UserName;
             if (!ModelState.IsValid)
             {
                 await LoadAsync(user);
@@ -111,8 +138,19 @@ namespace MyShop.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            if (Input.Role is not null)
+                await _userManager.RemoveFromRoleAsync(user, (await _userManager.GetRolesAsync(user))[0]);
+            user.Address = Input.Address;
+            user.City = Input.City;
+            user.Name = Input.Name;
+            user.LastName = Input.LastName;
+            user.PostalCode = Input.PostalCode;
+            if (Input.Role is not null)
+                await _userManager.AddToRoleAsync(user, Input.Role);
+            await _userManager.UpdateAsync(user);
+            if (UserName == User.Identity.Name)
+                await _signInManager.RefreshSignInAsync(user);
+            StatusMessage = "Profile has been updated";
             return RedirectToPage();
         }
     }

@@ -76,4 +76,13 @@ public class CartService : ICartService
 
         return cartToUpdate;
     }
+
+    public async Task<List<Cart>> GetAllUserPastCarts(string userId)
+    {
+        await using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var allPastUserCarts = await dbContext.Carts.Where(c => c.ShopAppWebUserId == userId && c.CartStatus == CartStatus.FINISHED).ToListAsync();
+
+        return allPastUserCarts;
+    }
 }

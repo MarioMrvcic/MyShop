@@ -15,4 +15,6 @@ public interface ICartProductService
     Task<List<CartProduct>> GetAllCartProductEntriesForCartAsync(Cart cart);
 
     Task<CartProduct> UpdateQuantityForProductInCart(CartProduct productToUpdate);
+
+    Task<List<CartProduct>> GetAllCartProductEntriesForCartByCartIdAsync(int cartId);
 }
